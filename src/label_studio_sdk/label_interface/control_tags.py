@@ -425,7 +425,10 @@ class ControlTag(LabelStudioTag):
             )
 
         kwargs[self._label_attr_name] = label
-        
+        if kwargs.get('taxonomy'):
+            taxonomy_value = [kwargs.get('taxonomy')]
+            kwargs.pop('taxonomy')
+            return self._label_simple(to_name=to_name, taxonomy=taxonomy_value, **kwargs)
         return self._label_simple(to_name=to_name, **kwargs)
 
     def label(
@@ -475,7 +478,7 @@ class ControlTag(LabelStudioTag):
         for value in values:
             if len(value) == 1 and self._label_attr_name in value:
                 v = value[self._label_attr_name]
-                labels.append(v[0] if type(v) == list and len(v) == 1 else v)
+                labels.append(v[0] if len(v) == 1 else v)
             else:
                 labels.append(value)
         return labels[0] if len(labels) == 1 else labels
